@@ -125,6 +125,42 @@ public class HiveOperation {
         con.close();
     }
 
+    /** Drop database */
+    public void dropDatabases(String dbName) throws SQLException{
+        if (dbName.equals(this.db)){
+            try {
+                Class.forName(driverName);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+            Connection con = DriverManager.getConnection(uri, user, passwd);
+            Statement stmt = con.createStatement();
+
+            stmt.execute("drop database if exists `" + dbName + "`");
+            System.out.println("Database " + dbName + " dropped.");
+            con.close();
+        }
+    }
+
+    /** Drop table */
+    public void dropTable(String dbName, String tableName) throws SQLException{
+        if (dbName.equals(this.db)){
+            try {
+                Class.forName(driverName);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+            Connection con = DriverManager.getConnection(uri, user, passwd);
+            Statement stmt = con.createStatement();
+
+            stmt.execute(String.format("drop table if exists `%s`.`%s`", dbName, tableName));
+            System.out.println("Table " + tableName + " dropped.");
+            con.close();
+        }
+    }
+
     public static void main(String[] args) throws SQLException{
         String sql = "SELECT * FROM click LIMIT 10";
         (new HiveOperation("default")).showQuery(sql);
