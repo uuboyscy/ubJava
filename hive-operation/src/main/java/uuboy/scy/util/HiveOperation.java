@@ -27,6 +27,7 @@ public class HiveOperation {
         this.uri = host + "/" + db;
     }
 
+    /** Print query result */
     public void showQuery(String sql) throws SQLException{
         try {
             Class.forName(driverName);
@@ -56,6 +57,7 @@ public class HiveOperation {
         con.close();
     }
 
+    /** Get query result set */
     public ResultSet getQuery(String sql) throws SQLException {
         try {
             Class.forName(driverName);
@@ -68,11 +70,10 @@ public class HiveOperation {
 
         System.out.println("Running: " + sql);
 
-        ResultSet result = stmt.executeQuery(sql);
-
-        return result;
+        return stmt.executeQuery(sql);
     }
 
+    /** Create Hive specific database */
     public void createHiveDatabase(String dbName) throws SQLException {
         try {
             Class.forName(driverName);
@@ -89,6 +90,7 @@ public class HiveOperation {
         con.close();
     }
 
+    /** Create Hive database according to constructor */
     public void createHiveDatabase() throws SQLException {
         String dbName = this.db;
         try {
@@ -106,6 +108,7 @@ public class HiveOperation {
         con.close();
     }
 
+    /** Create Hive table */
     public void createHiveTable(String sql) throws SQLException {
         try {
             Class.forName(driverName);
