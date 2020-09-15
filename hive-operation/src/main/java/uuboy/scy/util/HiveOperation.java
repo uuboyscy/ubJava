@@ -26,6 +26,18 @@ public class HiveOperation {
         this.db = db;
         this.uri = host + "/" + db;
     }
+    
+    public String getDb() {
+        return db;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getUri() {
+        return uri;
+    }
 
     /** Print query result */
     public void showQuery(String sql) throws SQLException{
