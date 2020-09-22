@@ -8,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.DriverManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class HiveOperation {
     private String driverName = "org.apache.hive.jdbc.HiveDriver";
     private String host = HiveConfiguration.host;
@@ -160,10 +163,43 @@ public class HiveOperation {
             con.close();
         }
     }
+    
+    /** Add partition */
+    public void addPartition(String dbName, String tableName, String partitionLocation, Map<String, String> partitioNameValue) throws SQLException {
+        if (dbName.equals(this.db)){
+            try {
+                Class.forName(driverName);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+            Connection con = DriverManager.getConnection(uri, user, passwd);
+            Statement stmt = con.createStatement();
+
+            String partition = "";
+            for (String column : partitioNameValue.keySet())
+                partition += String.format("%s='%s',", column, partitioNameValue.get(column));
+            String sql = String.format("ALTER TABLE %s.%s ADD PARTITION (", dbName, tableName);
+            sql += partition.substring(0, partition.length() - 1);
+            sql += String.format(") LOCATION '%s'", partitionLocation);
+
+            stmt.execute(sql);
+            System.out.println("SQL \"" + sql + "\" executed.");
+            con.close();
+        }
+    }
 
     public static void main(String[] args) throws SQLException{
         String sql = "SELECT * FROM click LIMIT 10";
         (new HiveOperation("default")).showQuery(sql);
         (new HiveOperation("default")).createHiveDatabase();
+        Map<String, String> nk = new HashMap<>();
+        nk.put("m", "2020-07");
+        nk.put("d", "2020-07-08");
+        (new HiveOperation("default")).addPartition(
+                "default",
+                "tmptable",
+                "/hive/default/tmptable/m=2020-07/d=2020-07-08/",
+                nk);
     }
 }
