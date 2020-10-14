@@ -101,6 +101,13 @@ public class BucketOperation {
                 new File(downloadPath)
         );
     }
+    
+    /** Upload file to certain bucket */
+    public void uploadFile(String bucketName, String localFilePath, String s3Path){
+        AmazonS3 conn = (new GetCredential()).conn;
+        Bucket bucket = getBucket(bucketName);
+        conn.putObject(bucket.getName(), s3Path, new File(localFilePath));
+    }
 
     /** Delete one content object in certain bucket */
     public void deleteBucketContent(String bucketName, String contentName){
