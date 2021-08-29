@@ -26,7 +26,7 @@ public class HiveOperation {
         this.db = db;
         this.uri = host + "/" + db;
     }
-    
+
     public String getDb() {
         return db;
     }
@@ -174,8 +174,8 @@ public class HiveOperation {
     }
 
     public static void main(String[] args) throws SQLException{
-        String sql = "SELECT * FROM click LIMIT 10";
-        (new HiveOperation("default")).showQuery(sql);
-        (new HiveOperation("default")).createHiveDatabase();
+        String sql = "SELECT COUNT(*) FROM testtable LIMIT 10";
+        (new HiveOperation("testdb")).showQuery(sql);
+//        (new HiveOperation("default")).createHiveDatabase();
     }
 }
