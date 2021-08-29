@@ -185,8 +185,6 @@ public class HiveOperation {
                 e.printStackTrace();
                 System.exit(1);
             }
-            Connection con = DriverManager.getConnection(uri, user, passwd);
-            Statement stmt = con.createStatement();
 
             String partition = "";
             for (String column : partitioNameValue.keySet())
@@ -195,9 +193,19 @@ public class HiveOperation {
             sql += partition.substring(0, partition.length() - 1);
             sql += String.format(") LOCATION '%s'", partitionLocation);
 
-            stmt.execute(sql);
-            System.out.println("SQL \"" + sql + "\" executed.");
-            con.close();
+            System.out.println("[INFO] SQL \"" + sql + "\" prepared.");
+
+            Connection con = DriverManager.getConnection(uri, user, passwd);
+            Statement stmt = con.createStatement();
+            try {
+                stmt.execute(sql);
+                System.out.println("[INFO] SQL \"" + sql + "\" executed.");
+//                con.close();
+            } catch (SQLException e) {
+                System.out.println("[ERRO] SQL \"" + sql + "\" executed error.");
+            } finally {
+                con.close();
+            }
         }
     }
 
